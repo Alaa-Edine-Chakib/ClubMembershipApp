@@ -19,7 +19,8 @@ namespace ClubMembershipApp.FieldValidators
             AdressSecondLine,
             AdressCity,
             AdressPostCode,
-            PasswordConfirm
+            PasswordConfirm,
+            Email
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using FieldValidationAPI;
+﻿using ClubMembershipApp.Data;
+using FieldValidationAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,7 @@ namespace ClubMembershipApp.FieldValidators
         EmailExistsDel _emailExistsDel = null;
 
         string[] _fieldArray = null;
+        IRegister _register = null;
 
         public string[] FieldArray
         {
@@ -39,17 +41,19 @@ namespace ClubMembershipApp.FieldValidators
             }
         }
 
-        public FieldValidorDelegate ValidatorDel => _fieldValidatorDel;
+        public FieldValidorDelegate Validator => _fieldValidatorDel;
 
-       
-        public UserRegistrationValidator()
+     
+
+        public UserRegistrationValidator(IRegister register)
         {
-
+            _register = register;
         }
 
         public void InitializeFieldValidators()
         {
             _fieldValidatorDel = new FieldValidorDelegate(ValidField);
+            _emailExistsDel = new EmailExistsDel(_register.EmailExiste);
             _requiredFieldValidDel = CommonFieldValidatorFunctions.RequiredFieldValid;
             _stringLengthFieldValidDel = CommonFieldValidatorFunctions.StringLengthFieldValid;
             _dateValidDel = CommonFieldValidatorFunctions.DateValid;
@@ -86,7 +90,6 @@ namespace ClubMembershipApp.FieldValidators
                     break;
                 case FieldConstants.UserRegistrationFields.PhoneNumber:
                     fieldInvalidMessage = (!_requiredFieldValidDel(fieldValue)) ? $"Vous devez entrer une valeur pour ce champs:{Enum.GetName(typeof(FieldConstants.UserRegistrationFields), userRegistrationFields)}{Environment.NewLine}" : "";
-                    fieldInvalidMessage = (fieldInvalidMessage == "" && !_patterMatchValidDel(fieldValue, CommonRegularExpressionValidationPatterns.QuebecPhoneNumberPattern)) ? $"La valeur doit être un numéro de téléphone valide pour ce champs:{Enum.GetName(typeof(FieldConstants.UserRegistrationFields), userRegistrationFields)}{Environment.NewLine}" : fieldInvalidMessage;
                     break;
                 case FieldConstants.UserRegistrationFields.AdressFirstLine:
                     fieldInvalidMessage = (!_requiredFieldValidDel(fieldValue)) ? $"Vous devez entrer une valeur pour ce champs:{Enum.GetName(typeof(FieldConstants.UserRegistrationFields), userRegistrationFields)}{Environment.NewLine}" : "";
@@ -100,6 +103,11 @@ namespace ClubMembershipApp.FieldValidators
                 case FieldConstants.UserRegistrationFields.AdressPostCode:
                     fieldInvalidMessage = (!_requiredFieldValidDel(fieldValue)) ? $"Vous devez entrer une valeur pour ce champs:{Enum.GetName(typeof(FieldConstants.UserRegistrationFields), userRegistrationFields)}{Environment.NewLine}" : "";
                     fieldInvalidMessage = (fieldInvalidMessage == "" && !_patterMatchValidDel(fieldValue, CommonRegularExpressionValidationPatterns.QuebecPostalCodePattern)) ? $"La valeur doit être un code postal valide pour ce champs:{Enum.GetName(typeof(FieldConstants.UserRegistrationFields), userRegistrationFields)}{Environment.NewLine}" : fieldInvalidMessage;
+                    break;
+                case FieldConstants.UserRegistrationFields.Email:
+                    fieldInvalidMessage = (!_requiredFieldValidDel(fieldValue)) ? $"Vous devez entrer une valeur pour ce champs:{Enum.GetName(typeof(FieldConstants.UserRegistrationFields), userRegistrationFields)}{Environment.NewLine}" : "";
+                    fieldInvalidMessage = (fieldInvalidMessage == "" && !_patterMatchValidDel(fieldValue, CommonRegularExpressionValidationPatterns.EmailPattern)) ? $"La valeur doit être un courriel valide pour ce champs:{Enum.GetName(typeof(FieldConstants.UserRegistrationFields), userRegistrationFields)}{Environment.NewLine}" : fieldInvalidMessage;
+                    fieldInvalidMessage = (fieldInvalidMessage == "" && _emailExistsDel(fieldValue)) ? $"Cet email existe deja:{Environment.NewLine}" : fieldInvalidMessage;
                     break;
                 default:
                     throw new ArgumentException("Invalid field index");

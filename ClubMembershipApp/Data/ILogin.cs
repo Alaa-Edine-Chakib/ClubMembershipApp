@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClubMembershipApp.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace ClubMembershipApp.Data
 {
-    public interface IRegister
+    public interface ILogin
     {
-        bool Register(string[] fields);
-        bool EmailExiste(string emailAdress);
+        User Login(string email, string password);
 
     }
 }
