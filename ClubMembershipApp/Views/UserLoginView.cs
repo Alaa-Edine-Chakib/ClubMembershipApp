@@ -44,6 +44,7 @@ namespace ClubMembershipApp.Views
                 Console.WriteLine("Adresse e-mail ou mot de passe incorrect.");
                 CommonOutputFormat.ChangeFontColor(CommonOutputFormat.FontTheme.Default);
                 Console.ReadKey();
+                RunView();
             }
 
         }

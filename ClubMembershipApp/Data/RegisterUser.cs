@@ -18,7 +18,7 @@ namespace ClubMembershipApp.Data
             {
                 emailExist = dbContext.Users.Any(u => u.Email.ToLower().Trim() == emailAdress.ToLower().Trim());
             }
-            return false;
+            return emailExist;
         }
 
         public bool Register(string[] fields)

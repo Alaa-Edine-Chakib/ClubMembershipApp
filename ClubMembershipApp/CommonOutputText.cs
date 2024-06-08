@@ -40,20 +40,17 @@ namespace ClubMembershipApp
             Console.Clear();
             Console.WriteLine(MainHeading);
             Console.WriteLine();
-            Console.WriteLine();
         }
 
         public static void WriteRegisterHeading()
         {
             Console.WriteLine(RegisterHeading);
             Console.WriteLine();
-            Console.WriteLine();
         }
 
         public static void WriteLoginHeading()
         {
             Console.WriteLine(LoginHeading);
-            Console.WriteLine();
             Console.WriteLine();
         }
     }
